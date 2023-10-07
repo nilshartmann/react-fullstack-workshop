@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+
+    <title>React 18 Training</title>
+
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui"
+    />
+    <link rel="stylesheet" href="slides/revealjs/reveal.js/dist/reset.css" />
+    <link rel="stylesheet" href="slides/revealjs/reveal.js/dist/reveal.css" />
+    <link rel="stylesheet" href="slides/revealjs/reveal.js/dist/theme/solarized.css" />
+
+    <!-- Theme used for syntax hislides/ghlighted code -->
+    <link rel="stylesheet" href="slides/revealjs/highlight-js-github-theme.css" />
+    <link rel="stylesheet" href="slides/revealjs/styles.css" />
+  </head>
+
+  <body>
+    <div class="reveal">
+      <!-- Any section element inside of this container is displayed as a slide -->
+      <div class="slides">
+        <section data-state="title">
+          <h2 class="title" style="font-size: 7rem">
+            <b>React: Testen, Context, GraphQL</b>
+          </h2>
+
+          <h4>
+            <span class="transparent-bg">
+              <a href="https://nilshartmann.net" target="_blank">Nils Hartmann</a>
+              |
+              <a href="https://twitter.com/nilshartmann" target="_blank">@nilshartmann</a>
+            </span>
+          </h4>
+          <p style="margin-top: 4rem"></p>
+          <div>
+            <h3><span class="transparent-bg">Repository</span></h3>
+            <p>
+              <span class="transparent-bg"
+                >Remote:
+                <a href="https://github.com/nilshartmann/react18-training"
+                  >https://github.com/nilshartmann/react18-training</a
+                ></span
+              >
+            </p>
+          </div>
+          <p style="margin-top: 4rem"></p>
+          <div>
+            <h3><span class="transparent-bg">Slides</span></h3>
+            <p>
+              <span class="transparent-bg"
+                >Lokal: 2023-06-16-react-testen-context-graphql.html</span
+              >
+            </p>
+            <p>
+              <span class="transparent-bg"
+                >Remote:
+                <a
+                  href="https://nilshartmann.github.io/react18-training/2023-06-16-react-testen-context-graphql.html"
+                  >https://nilshartmann.github.io/react18-training/2023-06-16-react-testen-context-graphql.html</a
+                ></span
+              >
+            </p>
+          </div>
+        </section>
+        <section>
+          <h2>Nils Hartmann</h2>
+          <p>
+            <a href="https://nilshartmann.net" target="_blank">https://nilshartmann.net</a>
+            /
+            <a href="https://twitter.com/nilshartmann" target="_blank">@nilshartmann</a>
+          </p>
+          <p>
+            <em>Freiberuflicher Software-Entwickler, Berater und Trainer aus Hamburg</em>
+          </p>
+
+          <div style="display: flex; justify-content: center">
+            <div>
+              <p>Java</p>
+              <p>JavaScript, TypeScript</p>
+              <p>React</p>
+              <p>Single-Page-Applications</p>
+              <p>GraphQL</p>
+              <p style="margin-top: 20px">
+                <a href="https://nilshartmann.net/workshops">Schulungen und Workshops</a>
+              </p>
+            </div>
+            <div style="margin-left: 15px">
+              <a href="https://reactbuch.de"
+                ><img
+                  style="max-height: 450px"
+                  src="slides/images/react-buch-v2.jpg"
+                /><br />https://reactbuch.de</a
+              >
+              <br />
+            </div>
+          </div>
+        </section>
+
+        <!-- ============================================================================= -->
+        <section data-markdown>
+          <textarea data-template>
+### Zeitplan
+
+* 08:30 - 16:00
+  * 12:00 bis 13:00 Mittagspause 🍝
+  * Kurze Pausen zwischendurch ☕️
+
+---
+### Agenda
+
+* Kurze Planung, welche Themen wir (wann) machen
+* Miro-Board
+          </textarea>
+        </section>
+        <section>
+          <h2>Agenda</h2>
+          <ul class="xx-list">
+            <li>
+              <a href="#/t-test">Testen mit Jest</a>
+            </li>
+            <li>
+              <a href="#/t-context">Context API</a>
+            </li>
+            <li style="margin-top: 20px">
+              <a href="#/t-state">Globales Zustandsmanagement mit Redux Toolkit</a>
+              <ul>
+                <li><a href="#/t-redux">Redux Grundlagen</a></li>
+                <li><a href="#/t-rtk">Redux Toolkit</a></li>
+                <li>Asynchrone Actions mit <a href="#/t-redux-thunk">Redux Thunk</a></li>
+                <li>Data Fetching mit <a href="#/t-rtk-query">Redux Toolkit Query</a></li>
+              </ul>
+            </li>
+            <li>
+              <a href="#/t-apollo-react-deep-dive">Apollo Deep Dive</a>
+            </li>
+          </ul>
+        </section>
+
+        <!-- ============================================================================= -->
+        <section data-markdown>
+          <textarea data-template>
+            ## Komponententest mit Playwright
+
+            * Vorteil gegenüber RTL: Läuft im echten Browser
+              * Man kann den Browser bzw. die Render-Ausgabe sehen
+              * Genau wie RTL: man kann Props / Callbacks mocken
+              * Netzwork mock von Playwright kann genutzt werden
+              * Responsiveness etc. kann getestet werden
+            * Aber:
+              * Genau wie bei RTL muss die Komponente "lauffähig" sein
+              * Alle Abhängigkeiten (Redux, GraphQL, Context, globales CSS (!)), die die Komponente
+              nutzt, müssen im Test vorhanden sein
+                * `index.ts`
+              * Playwright muss die Komponente bauen können (Bundling, TS)
+                * Man muss ggf. Konfiguration nachbauen https://playwright.dev/docs/test-components#i-have-a-project-that-already-uses-vite-can-i-reuse-the-config
+                * Funktioniert das mit Next.js?
+            * Wie kann man mischen? "Echte" PW-Test und Component-Tests in einem Projekt    
+            * Build-Stack: Vite, beim Test ausführen wird eine Vite-Anwendung gebaut und deployed
+          </textarea>
+        </section>
+
+        <!-- ============================================================================= -->
+        <section>
+          <h2>Geschafft! 😊</h2>
+          <h3>Vielen Dank für Eure Teilnahme!</h3>
+          <h3>Viel Spaß und Erfolg mit React!</h3>
+          <p>Wenn ihr noch Fragen habt, könnt ihr mich erreichen:</p>
+          <p>Mail: <a href="mailto:nils@nilshartmann.net">nils@nilshartmann.net</a></p>
+          <p>
+            Web: <a href="https://nilshartmann.net" target="_blank">https://nilshartmann.net</a>
+          </p>
+          <p>
+            Twitter: <a href="https://twitter.com/nilshartmann" target="_blank">@nilshartmann</a>
+          </p>
+        </section>
+      </div>
+    </div>
+
+    <script src="slides/revealjs/reveal.js/dist/reveal.js"></script>
+    <script src="slides/revealjs/reveal.js/plugin/notes/notes.js"></script>
+    <script src="slides/revealjs/reveal.js/plugin/markdown/markdown.js"></script>
+    <script src="slides/revealjs/reveal.js/plugin/highlight/highlight.js"></script>
+    <script src="slides/revealjs/config.js"></script>
+  </body>
+</html>
