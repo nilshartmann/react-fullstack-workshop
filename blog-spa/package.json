@@ -10,7 +10,8 @@
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "check": "pnpm lint && pnpm prettier:check && tsc --noEmit --skipLibCheck",
-    "prettier:check": "prettier --check ."
+    "prettier:check": "prettier --check .",
+    "test-ct": "playwright test -c playwright-ct.config.ts"
   },
   "dependencies": {
     "@tanstack/react-query": "5.0.0-rc.4",
@@ -24,6 +25,7 @@
     "zod": "^3.22.4"
   },
   "devDependencies": {
+    "@playwright/experimental-ct-react": "^1.38.1",
     "@tanstack/eslint-plugin-query": "5.0.0-rc.4",
     "@types/node": "^20.8.2",
     "@types/react": "^18.2.15",
