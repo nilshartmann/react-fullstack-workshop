@@ -3,7 +3,6 @@ import { GetTagsResponse } from "../../shared/api/types.ts";
 import { H2 } from "../../shared/components/Heading.tsx";
 import { timeString } from "../../shared/components/date-formatter.ts";
 import "./TagCloud.css";
-
 type TagCloudProps = {
   tags: GetTagsResponse;
 };
