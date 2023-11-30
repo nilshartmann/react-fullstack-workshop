@@ -1,8 +1,5 @@
 import { getBlogPost, getComments } from "@/app/shared/api/backend-queries";
 import { H1 } from "@/app/shared/components/Heading";
-import PageHeader from "@/app/shared/components/PageHeader";
-import AppLink from "@/app/shared/components/AppLink";
-import { Main, Sidebar, TwoColumnLayout } from "@/app/shared/components/Layout";
 import Post from "@/app/shared/blog/Post";
 import { Suspense } from "react";
 import LoadingIndicator from "@/app/shared/components/LoadingIndicator";

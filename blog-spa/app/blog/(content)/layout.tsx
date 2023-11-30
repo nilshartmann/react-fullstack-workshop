@@ -1,4 +1,4 @@
-import BlogContentLayout from "../../shared/blog/BlogContentLayout";
+import BlogContentLayout from "@/shared/blog/BlogContentLayout";
 import React from "react";
 import { Outlet } from "react-router-dom";
 
