@@ -1,5 +1,5 @@
 import { useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
-import { getComments } from "../api/backend-queries.ts";
+import { getComments } from "../../../../shared/api/backend-queries.ts";
 
 export function usePreFetchComments(postId: string) {
   // https://github.com/TanStack/query/issues/6108#issuecomment-1750204876

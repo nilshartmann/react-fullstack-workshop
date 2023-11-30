@@ -1,8 +1,8 @@
 import { tagCloud as createTagCloud } from "tag-cloud";
-import { GetTagsResponse } from "../api/types";
-import { H2 } from "../components/Heading"; // 4kb lib which is not transferred to server
+import { GetTagsResponse } from "../../shared/api/types.ts";
+import { H2 } from "../../shared/components/Heading.tsx";
+import { timeString } from "../../shared/components/date-formatter.ts";
 import "./TagCloud.css";
-import { timeString } from "../components/date-formatter";
 
 type TagCloudProps = {
   tags: GetTagsResponse;

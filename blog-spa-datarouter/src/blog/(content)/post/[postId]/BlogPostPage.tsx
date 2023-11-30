@@ -1,12 +1,15 @@
-import Post from "./Post";
-import { Suspense } from "react";
-import LoadingIndicator from "../components/LoadingIndicator.tsx";
-import CommentList from "./CommentList.tsx";
-import { Await, defer, LoaderFunction, useLoaderData } from "react-router-dom";
-import { BlogPost, Comment } from "../api/types.ts";
 import invariant from "tiny-invariant";
-import { queryClient } from "../../query-client.ts";
-import { getBlogPost, getComments } from "../api/backend-queries.ts";
+import { Await, defer, LoaderFunction, useLoaderData } from "react-router-dom";
+import { queryClient } from "../../../../query-client.ts";
+import {
+  getBlogPost,
+  getComments,
+} from "../../../../shared/api/backend-queries.ts";
+import { BlogPost } from "../../../../shared/api/types.ts";
+import Post from "./Post.tsx";
+import { Suspense } from "react";
+import LoadingIndicator from "../../../../shared/components/LoadingIndicator.tsx";
+import CommentList from "./CommentList.tsx";
 
 export const blogPageLoader: LoaderFunction = ({ params }) => {
   const { postId } = params;

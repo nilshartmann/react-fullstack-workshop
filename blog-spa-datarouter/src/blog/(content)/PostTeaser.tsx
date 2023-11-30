@@ -1,7 +1,7 @@
-import Card from "../components/Card";
-import { BlogPostTeaser } from "../api/types";
-import { dateTimeString } from "../components/date-formatter";
-import AppLink from "../components/AppLink";
+import { BlogPostTeaser } from "../../shared/api/types.ts";
+import Card from "../../shared/components/Card.tsx";
+import { dateTimeString } from "../../shared/components/date-formatter.ts";
+import AppLink from "../../shared/components/AppLink.tsx";
 
 type PostPreviewProps = { post: BlogPostTeaser };
 export default function PostTeaser({ post }: PostPreviewProps) {

@@ -1,6 +1,6 @@
-import Card from "../components/Card";
-import { dateTimeString } from "../components/date-formatter";
-import { H1 } from "../components/Heading.tsx";
+import Card from "../../../../shared/components/Card.tsx";
+import { dateTimeString } from "../../../../shared/components/date-formatter.ts";
+import { H1 } from "../../../../shared/components/Heading.tsx";
 
 type PostProps = {
   post: {

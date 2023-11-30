@@ -1,19 +1,19 @@
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import RootLayout from "./layout.tsx";
+import LandingPage from "./LandingPage.tsx";
+import AddRouteLayout from "./blog/add/AddRouteLayout.tsx";
+import PostEditor, { addPostAction } from "./blog/add/PostEditor.tsx";
+import BlogListRoute from "./blog/(content)/BlogListRoute.tsx";
+import { blogListPageLoader } from "./blog/(content)/BlogListPage.tsx";
+import BlogPostPageRoute from "./blog/(content)/post/[postId]/BlogPostPageRoute.tsx";
+import { blogPageLoader } from "./blog/(content)/post/[postId]/BlogPostPage.tsx";
+import BlogContentLayout from "./blog/(content)/BlogContentLayout.tsx";
+
 import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import RootLayout from "./layout.tsx";
-import LandingPage from "./page.tsx";
 import { QueryClientProvider } from "@tanstack/react-query";
-import BlogPostPageRoute from "./blog/(content)/post/[postId]/page.tsx";
-import ContentRouteLayout from "./blog/(content)/layout.tsx";
-import BlogListRoute from "./blog/page.tsx";
-import AddPostRoute from "./blog/add/page.tsx";
-import AddRouteLayout from "./blog/add/layout.tsx";
 import { queryClient } from "./query-client.ts";
-import { addPostAction } from "./shared/blog/PostEditor.tsx";
-import { blogListPageLoader } from "./shared/blog/BlogListPage.tsx";
-import { blogPageLoader } from "./shared/blog/BlogPostPage.tsx";
 
 const router = createBrowserRouter([
   {
@@ -28,12 +28,12 @@ const router = createBrowserRouter([
             path: "add",
             element: <AddRouteLayout />,
             children: [
-              { index: true, element: <AddPostRoute />, action: addPostAction },
+              { index: true, element: <PostEditor />, action: addPostAction },
             ],
           },
 
           {
-            element: <ContentRouteLayout />,
+            element: <BlogContentLayout />,
             children: [
               {
                 index: true,

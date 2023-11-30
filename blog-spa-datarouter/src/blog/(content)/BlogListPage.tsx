@@ -1,11 +1,11 @@
+// Typesafety of loader functions: https://github.com/remix-run/remix/blob/40a4d7d5e25eb5edc9a622278ab111d881c7c155/decisions/0003-infer-types-for-useloaderdata-and-useactiondata-from-loader-and-action-via-generics.md
+import { Await, defer, LoaderFunction, useLoaderData } from "react-router-dom";
+import { GetBlogTeaserListResponse, OrderBy } from "../../shared/api/types.ts";
+import { queryClient } from "../../query-client.ts";
+import { getBlogTeaserList } from "../../shared/api/backend-queries.ts";
 import OrderByButton from "./OrderByButton.tsx";
 import PostTeaser from "./PostTeaser.tsx";
-import { GetBlogTeaserListResponse, OrderBy } from "../api/types.ts";
-import { Await, defer, LoaderFunction, useLoaderData } from "react-router-dom";
-import { queryClient } from "../../query-client.ts";
-import { getBlogTeaserList } from "../api/backend-queries.ts";
 
-// Typesafety of loader functions: https://github.com/remix-run/remix/blob/40a4d7d5e25eb5edc9a622278ab111d881c7c155/decisions/0003-infer-types-for-useloaderdata-and-useactiondata-from-loader-and-action-via-generics.md
 export const blogListPageLoader: LoaderFunction = ({ request }) => {
   const url = new URL(request.url);
   const orderBy = (url.searchParams.get("order_by") as OrderBy) || "desc";

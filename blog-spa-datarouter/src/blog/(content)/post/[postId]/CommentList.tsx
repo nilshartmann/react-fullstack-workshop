@@ -1,7 +1,7 @@
-import { Comment } from "../api/types";
-import Card from "../components/Card";
-import { H2 } from "../components/Heading";
 import { useAsyncValue } from "react-router-dom";
+import Card from "../../../../shared/components/Card.tsx";
+import { H2 } from "../../../../shared/components/Heading.tsx";
+import { Comment } from "../../../../shared/api/types.ts";
 
 export default function CommentList() {
   const comments = useAsyncValue() as Comment[] | null;

@@ -1,7 +1,7 @@
-import LoadingIndicator from "../shared/components/LoadingIndicator.tsx";
-import useBlogSearchParams from "../shared/blog/useBlogSearchParams.tsx";
-import BlogListPage from "../shared/blog/BlogListPage.tsx";
+import useBlogSearchParams from "./useBlogSearchParams.tsx";
 import { Suspense } from "react";
+import LoadingIndicator from "../../shared/components/LoadingIndicator.tsx";
+import BlogListPage from "./BlogListPage.tsx";
 
 export default function BlogListRoute() {
   const { currentOrderBy } = useBlogSearchParams();
