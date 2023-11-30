@@ -1,6 +1,6 @@
-import Card from "../components/Card";
-import { H2 } from "../components/Heading";
 import { useFetchComments } from "./use-fetch-comments.tsx";
+import Card from "../../../../shared/components/Card.tsx";
+import { H2 } from "../../../../shared/components/Heading.tsx";
 
 type CommentListProps = {
   postId: string;

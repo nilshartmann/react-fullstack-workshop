@@ -1,5 +1,5 @@
 import { defineConfig, devices } from "@playwright/experimental-ct-react";
-
+import { resolve } from "path";
 /**
  * See https://playwright.dev/docs/test-configuration.
  */

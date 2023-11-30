@@ -1,5 +1,5 @@
-import { OrderBy } from "../api/types";
 import { useSearchParams } from "react-router-dom";
+import { OrderBy } from "../../shared/api/types.ts";
 
 export default function useBlogSearchParams() {
   const [searchParams, setSearchParams] = useSearchParams();

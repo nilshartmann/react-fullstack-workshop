@@ -1,15 +1,15 @@
-import { ChangeEvent, useState } from "react";
-import { addPost } from "../api/server-actions";
-import Message from "../components/Message";
-import Post from "./Post";
-import Card from "../components/Card";
-import Button from "../components/Button";
-import ButtonBar from "../components/ButtonBar";
-import { H2 } from "../components/Heading";
-import LoadingIndicator from "../components/LoadingIndicator";
-import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
-import { isApiError } from "../api/api-error.ts";
+import { useMutation } from "@tanstack/react-query";
+import { addPost } from "../../shared/api/server-actions.ts";
+import { ChangeEvent, useState } from "react";
+import { isApiError } from "../../shared/api/api-error.ts";
+import Card from "../../shared/components/Card.tsx";
+import Message from "../../shared/components/Message.tsx";
+import ButtonBar from "../../shared/components/ButtonBar.tsx";
+import Button from "../../shared/components/Button.tsx";
+import LoadingIndicator from "../../shared/components/LoadingIndicator.tsx";
+import { H2 } from "../../shared/components/Heading.tsx";
+import Post from "../(content)/post/[postId]/Post.tsx";
 
 export default function PostEditor() {
   const navigate = useNavigate();

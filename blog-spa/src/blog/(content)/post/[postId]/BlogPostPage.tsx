@@ -1,9 +1,9 @@
-import { getBlogPost } from "../api/backend-queries";
-import Post from "./Post";
-import { useSuspenseQuery } from "@tanstack/react-query";
-import { Suspense } from "react";
-import LoadingIndicator from "../components/LoadingIndicator.tsx";
 import { usePreFetchComments } from "./use-fetch-comments.tsx";
+import { useSuspenseQuery } from "@tanstack/react-query";
+import { getBlogPost } from "../../../../shared/api/backend-queries.ts";
+import Post from "./Post.tsx";
+import { Suspense } from "react";
+import LoadingIndicator from "../../../../shared/components/LoadingIndicator.tsx";
 import CommentList from "./CommentList.tsx";
 
 type BlogPostPageProps = {

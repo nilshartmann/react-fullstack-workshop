@@ -1,16 +1,15 @@
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import RootLayout from "./layout.tsx";
+import LandingPage from "./LandingPage.tsx";
+import AddRouteLayout from "./blog/add/AddRouteLayout.tsx";
+import BlogListRoute from "./blog/(content)/BlogListRoute.tsx";
+import BlogPostPageRoute from "./blog/(content)/post/[postId]/BlogPostPageRoute.tsx";
+import PostEditor from "./blog/add/PostEditor.tsx";
+import BlogContentLayout from "./blog/(content)/BlogContentLayout.tsx";
 import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import RootLayout from "./layout.tsx";
-import LandingPage from "./page.tsx";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import BlogPostPageRoute from "./blog/(content)/post/[postId]/page.tsx";
-import ContentRouteLayout from "./blog/(content)/layout.tsx";
-import BlogListRoute from "./blog/page.tsx";
-import AddPostRoute from "./blog/add/page.tsx";
-import AddRouteLayout from "./blog/add/layout.tsx";
-
 const queryClient = new QueryClient();
 
 const router = createBrowserRouter([
@@ -25,11 +24,11 @@ const router = createBrowserRouter([
           {
             path: "add",
             element: <AddRouteLayout />,
-            children: [{ index: true, element: <AddPostRoute /> }],
+            children: [{ index: true, element: <PostEditor /> }],
           },
 
           {
-            element: <ContentRouteLayout />,
+            element: <BlogContentLayout />,
             children: [
               { index: true, element: <BlogListRoute /> },
               { path: "post/:postId", element: <BlogPostPageRoute /> },

@@ -1,7 +1,6 @@
-import { test, expect } from "@playwright/experimental-ct-react";
-import CommentList from "./CommentList";
-import { GetBlogPostResponse } from "@/app/shared/api/types.ts";
-import BlogPostPage from "@/app/shared/blog/BlogPostPage.tsx";
+import { expect, test } from "@playwright/experimental-ct-react";
+import { GetBlogPostResponse } from "../../../../shared/api/types.ts";
+import BlogPostPage from "./BlogPostPage.tsx";
 
 test("should work", async ({ mount, page }) => {
   const getBlogPostResponse: GetBlogPostResponse = {

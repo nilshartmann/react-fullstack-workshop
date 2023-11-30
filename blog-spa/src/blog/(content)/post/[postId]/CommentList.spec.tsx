@@ -1,4 +1,4 @@
-import { test, expect } from "@playwright/experimental-ct-react";
+import { expect, test } from "@playwright/experimental-ct-react";
 import CommentList from "./CommentList";
 
 test("should work", async ({ mount, page }) => {

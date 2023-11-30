@@ -1,8 +1,8 @@
-import { OrderBy } from "@/app/shared/api/types.ts";
+import { OrderBy } from "../../shared/api/types.ts";
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { getBlogTeaserList } from "@/app/shared/api/backend-queries.ts";
-import OrderByButton from "@/app/shared/blog/OrderByButton.tsx";
-import PostTeaser from "@/app/shared/blog/PostTeaser.tsx";
+import { getBlogTeaserList } from "../../shared/api/backend-queries.ts";
+import OrderByButton from "./OrderByButton.tsx";
+import PostTeaser from "./PostTeaser.tsx";
 
 type BlogListPageProps = {
   orderBy: OrderBy;

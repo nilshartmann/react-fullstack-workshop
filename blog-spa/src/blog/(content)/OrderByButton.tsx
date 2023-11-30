@@ -1,8 +1,8 @@
-import useBlogSearchParams from "./useBlogSearchParams";
-import Button from "../components/Button";
-import { OrderBy } from "../api/types";
+import { OrderBy } from "../../shared/api/types.ts";
 import { useTransition } from "react";
-import LoadingIndicator from "../components/LoadingIndicator";
+import useBlogSearchParams from "./useBlogSearchParams.tsx";
+import Button from "../../shared/components/Button.tsx";
+import LoadingIndicator from "../../shared/components/LoadingIndicator.tsx";
 
 type OrderByButtonProps = {
   orderBy: OrderBy;
