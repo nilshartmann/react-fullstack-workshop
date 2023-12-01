@@ -6,15 +6,14 @@ import {
   GetCommentsResponse,
   GetTagsResponse,
   OrderBy,
-  Tag,
 } from "@/app/shared/api/types";
 import { micromark } from "micromark";
 
 // ---------------------------------------------------------------------------------------------------
 // -- Simulate slowness
 // ---------------------------------------------------------------------------------------------------
+const getBlogTeaserListSlowdown = ``; // `1600`
 const getTagsSlowdown = ``; // `?slowDown=2400`;
-const getBlogTeaserListSlowdown = ``; // `&slowDown=1600`
 const getBlogPostSlowdown = ``; // `?slowDown=2400`
 const getCommentsSlowdown = ``; // `?slowDown=2400`
 
@@ -33,12 +32,29 @@ export async function getTags(): Promise<GetTagsResponse> {
 // -- getBlogTeaserList
 // ---------------------------------------------------------------------------------------------------
 
-export async function getBlogTeaserList(orderBy: OrderBy = "desc") {
+type GetBlogTeaserListParams = {
+  orderBy?: OrderBy;
+  filter?: string;
+};
+
+export async function getBlogTeaserList({
+  orderBy = "desc",
+  filter,
+}: GetBlogTeaserListParams = {}) {
   console.log("Starting fetch to external backend service");
+
+  const searchParams = new URLSearchParams();
+  searchParams.set("order_by", orderBy);
+  if (filter) {
+    searchParams.set("filter", filter);
+  }
+
+  if (getBlogTeaserListSlowdown) {
+    searchParams.set("slowDown", getBlogPostSlowdown);
+  }
+
   const r = await fetch(
-    `http://localhost:7002/posts?teaser&order_by=${encodeURIComponent(
-      orderBy,
-    )}${getBlogTeaserListSlowdown}`,
+    `http://localhost:7002/posts?teaser&${searchParams.toString()}`,
     {
       next: {
         tags: ["teaser"],

@@ -1,6 +1,6 @@
 "use server";
-import { revalidatePath, revalidateTag } from "next/cache";
-import { AddPostResponse, BlogPost, RawBlogPost } from "@/app/shared/api/types";
+import { revalidateTag } from "next/cache";
+import { AddPostResponse } from "@/app/shared/api/types";
 
 // ---------------------------------------------------------------------------------------------------
 // -- Simulate slowness

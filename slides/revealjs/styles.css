@@ -226,3 +226,8 @@ li.note:before {
 body.exkurs {
   background-color: #e3f3ff;
 }
+
+.reveal p.mt-5,
+.mt-5 {
+  margin-top: 5rem;
+}

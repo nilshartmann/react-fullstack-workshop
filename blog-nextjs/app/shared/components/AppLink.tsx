@@ -1,7 +1,5 @@
-import type { ReactNode } from "react";
 import clsx from "clsx";
 import Link from "next/link";
-import { Route } from "next";
 
 type AppLinkProps = Parameters<typeof Link>[0] & {
   size?: "sm" | "regular" | "lg";

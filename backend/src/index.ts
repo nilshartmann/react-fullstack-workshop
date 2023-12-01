@@ -23,10 +23,7 @@ app.use(express.json());
 
 app.use((req, res, next) => {
   console.log("Request received for", req.method, req.path, req.params);
-  res.header(
-    "Access-Control-Allow-Methods",
-    "OPTIONS,GET,PUT,POST,PATCH,DELETE"
-  );
+  res.header("Access-Control-Allow-Methods", "OPTIONS,GET,PUT,POST,PATCH,DELETE");
   res.header("Access-Control-Allow-Origin", "*");
   res.header(
     "Access-Control-Allow-Headers",
@@ -57,11 +54,11 @@ type Tag = { name: string; count: number };
 
 app.get("/tags", (req: Request, res: Response) => {
   const tags: Tag[] = Object.values(posts)
-    .flatMap((p) => p.tags.split(","))
-    .map((t) => t.trim())
-    .filter((tag) => !!tag) // filter out empty tags
+    .flatMap(p => p.tags.split(","))
+    .map(t => t.trim())
+    .filter(tag => !!tag) // filter out empty tags
     .reduce((tags, tag) => {
-      const t = tags.find((t) => t.name === tag);
+      const t = tags.find(t => t.name === tag);
       if (!t) {
         return [...tags, { name: tag, count: 0 }];
       }
@@ -78,12 +75,12 @@ app.get("/tags", (req: Request, res: Response) => {
 app.get("/posts/:postId", (req: Request, res: Response) => {
   const postId = req.params["postId"];
 
-  const post = posts.find((p) => p.id === postId);
+  const post = posts.find(p => p.id === postId);
 
   if (!post) {
     return res.status(404).json({
       error: `Post with id '${postId}' not found`,
-      meta: res.locals.meta,
+      meta: res.locals.meta
     });
   }
 
@@ -93,13 +90,13 @@ app.get("/posts/:postId", (req: Request, res: Response) => {
 app.get("/posts/:postId/comments", (req: Request, res: Response) => {
   const postId = req.params["postId"];
 
-  if (!posts.find((p) => p.id === postId)) {
+  if (!posts.find(p => p.id === postId)) {
     return res.status(404).json({
-      error: `Post with id '${postId}' not found`,
+      error: `Post with id '${postId}' not found`
     });
   }
 
-  const commentsForPost = comments.filter((c) => c.postId === postId);
+  const commentsForPost = comments.filter(c => c.postId === postId);
   return res.json({ comments: commentsForPost });
 });
 
@@ -117,23 +114,34 @@ app.get("/posts", (req, res) => {
   let result;
 
   if (req.query.teaser !== undefined) {
-    result = posts.map((p) => ({
+    result = posts.map(p => ({
       id: p.id,
       date: p.date,
       title: p.title,
       newestComment: findNewestCommentForPost(p.id),
-      teaser: p.teaser,
+      teaser: p.teaser
     }));
   } else {
-    result = posts.map((p) => ({
+    result = posts.map(p => ({
       id: p.id,
       date: p.date,
       title: p.title,
-      bodyMarkdown: p.bodyMarkdown,
+      bodyMarkdown: p.bodyMarkdown
     }));
   }
 
+  const filter = req.query.filter ? String(req.query.filter).toLowerCase() : null;
+  console.log("FILTER", filter);
   console.log("ORDER BY", req.query.order_by);
+
+  if (filter) {
+    result = posts.filter(
+      p =>
+        p.title.toLowerCase().includes(filter) ||
+        p.teaser.toLowerCase().includes(filter) ||
+        p.bodyMarkdown.toLowerCase().includes(filter)
+    );
+  }
 
   if (req.query.order_by === "asc") {
     result.sort(orderByDateOldestFirst);
@@ -147,9 +155,9 @@ app.get("/posts", (req, res) => {
 app.post("/posts/:postId/comments", (req, res) => {
   const postId = req.params["postId"];
 
-  if (!posts.find((p) => p.id === postId)) {
+  if (!posts.find(p => p.id === postId)) {
     return res.status(404).json({
-      error: `Post with id '${postId}' not found`,
+      error: `Post with id '${postId}' not found`
     });
   }
 
@@ -162,7 +170,7 @@ app.post("/posts/:postId/comments", (req, res) => {
     username: "Dave",
     comment,
     postId,
-    id: `P${comments.length + 1}`,
+    id: `P${comments.length + 1}`
   };
 
   comments = [...comments, newComment];
@@ -177,32 +185,25 @@ app.post("/posts", (req, res) => {
   }
 
   if (!post.title) {
-    return res
-      .status(400)
-      .json({ error: "post.title must be defined and not empty" });
+    return res.status(400).json({ error: "post.title must be defined and not empty" });
   }
 
   if (post.title.trim().length < 5) {
-    return res
-      .status(400)
-      .json({ error: "post.title must be at least five chars long" });
+    return res.status(400).json({ error: "post.title must be at least five chars long" });
   }
 
   if (!post.body) {
-    return res
-      .status(400)
-      .json({ error: "post.body must be defined and not empty" });
+    return res.status(400).json({ error: "post.body must be defined and not empty" });
   }
 
   const newPost = {
     user_id: "",
     title: post.title,
-    teaser:
-      post.body.length > 120 ? post.body.substring(0, 120) + "..." : post.body,
+    teaser: post.body.length > 120 ? post.body.substring(0, 120) + "..." : post.body,
     bodyMarkdown: post.body,
     date: new Date().toISOString(),
     id: `P${posts.length + 1}`,
-    tags: "",
+    tags: ""
   };
 
   posts = [...posts, newPost];
@@ -217,6 +218,7 @@ app.listen(port, () => {
     👉    Try http://localhost:${port}/posts/1
     👉    Try http://localhost:${port}/posts/3/comments
     👉    Try http://localhost:${port}/posts?teaser
+    👉    Try http://localhost:${port}/posts?teaser&filter=redux
     👉    Try "http POST http://localhost:7002/posts title=hallo body=welt"
     👉    Try "http POST http://localhost:7002/posts/1/comments comment=moin"
     😴    Simulate slowness: http://localhost:${port}/posts?slowDown=2400`);

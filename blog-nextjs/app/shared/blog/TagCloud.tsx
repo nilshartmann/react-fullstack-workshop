@@ -1,11 +1,8 @@
 import { tagCloud as createTagCloud } from "tag-cloud";
-import { GetTagsResponse, Tag } from "@/app/shared/api/types";
-import { H1, H2 } from "@/app/shared/components/Heading"; // 4kb lib which is not transferred to server
+import { GetTagsResponse } from "@/app/shared/api/types";
+import { H2 } from "@/app/shared/components/Heading"; // 4kb lib which is not transferred to server
 import "./TagCloud.css";
-import {
-  dateTimeString,
-  timeString,
-} from "@/app/shared/components/date-formatter";
+import { timeString } from "@/app/shared/components/date-formatter";
 
 type TagCloudProps = {
   tags: GetTagsResponse;

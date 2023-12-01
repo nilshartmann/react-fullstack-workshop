@@ -1,6 +1,6 @@
 import PageHeader from "@/app/shared/components/PageHeader";
 import React from "react";
-import { FullWidthLayout, Main } from "@/app/shared/components/Layout";
+import { FullWidthLayout } from "@/app/shared/components/Layout";
 import AppLink from "@/app/shared/components/AppLink";
 
 type PostEditorLayoutProps = {

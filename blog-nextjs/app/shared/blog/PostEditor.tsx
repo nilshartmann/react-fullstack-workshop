@@ -1,9 +1,7 @@
 "use client";
-import { useMutationState } from "@/app/shared/components/use-mutation-state";
-import { ChangeEvent, useRef, useState, useTransition } from "react";
+import { ChangeEvent, useState, useTransition } from "react";
 import { addPost } from "@/app/shared/api/server-actions";
 import { useRouter } from "next/navigation";
-import PageHeader from "@/app/shared/components/PageHeader";
 import Message from "@/app/shared/components/Message";
 import Post from "@/app/shared/blog/Post";
 import Card from "@/app/shared/components/Card";
@@ -11,51 +9,38 @@ import Button from "@/app/shared/components/Button";
 import ButtonBar from "@/app/shared/components/ButtonBar";
 import { H2 } from "@/app/shared/components/Heading";
 import LoadingIndicator from "@/app/shared/components/LoadingIndicator";
-import { isApiError } from "@/app/shared/api/api-error";
 
 export default function PostEditor() {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
-  const mutationState = useMutationState();
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
+  const [error, setError] = useState("");
 
-  const clearDisabled = (!title && !body) || mutationState.state.isLoading;
-  const saveButtonDisabled = !title || !body || mutationState.state.isLoading;
-
-  const mutationErrorMessage = mutationState.state.isError
-    ? `Saving failed: ${
-        isApiError(mutationState.state.err)
-          ? mutationState.state.err.error
-          : "Unknown reason"
-      }`
-    : null;
+  const clearDisabled = (!title && !body) || isPending;
+  const saveButtonDisabled = !title || !body || isPending;
 
   function clear() {
-    mutationState.reset();
+    setError("");
     setTitle("");
     setBody("");
   }
 
   function handleTitleChange(e: ChangeEvent<HTMLInputElement>) {
     setTitle(e.target.value);
-    mutationState.reset();
+    setError("");
   }
 
   function handleBodyChange(e: ChangeEvent<HTMLTextAreaElement>) {
     setBody(e.target.value);
-    mutationState.reset();
-  }
-
-  function openPostList() {
-    router.push("/blog");
+    setError("");
   }
 
   async function handleSave() {
     startTransition(async () => {
-      const result = await mutationState.run(() => addPost(title, body));
+      const result = await addPost(title, body);
       if (result.status === "success") {
-        openPostList();
+        router.push("/blog");
       }
     });
   }
@@ -65,7 +50,7 @@ export default function PostEditor() {
       <div className={"space-y-4"}>
         <Card>
           <div className={"Container"}>
-            <fieldset disabled={mutationState.state.isLoading}>
+            <fieldset disabled={isPending}>
               <label className={"block"}>
                 Title
                 <input
@@ -106,13 +91,13 @@ export default function PostEditor() {
               <Button disabled={clearDisabled} onClick={clear}>
                 Clear
               </Button>
-              <Button onClick={openPostList}>Cancel</Button>
+              <Button onClick={() => router.push("/blog")}>Cancel</Button>
               <Button disabled={saveButtonDisabled} onClick={handleSave}>
                 {isPending && <LoadingIndicator secondary />}
                 {isPending || "Save Post"}
               </Button>
             </ButtonBar>
-            {!!mutationErrorMessage && <Message msg={mutationErrorMessage} />}
+            {!!error && <Message msg={error} />}
           </div>
         </Card>
         <Card>
