@@ -109,7 +109,7 @@ code span.line-number {
 
 .reveal ul ul,
 .reveal ul ul ul {
-  list-style-type: circle;
+  list-style-type: disc;
 }
 
 /* Siehe auch config.js fuer no-icon! */

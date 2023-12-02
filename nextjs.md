@@ -1,8 +1,5 @@
+## Fullstack React mit
 # Next.js
-
-* Serverseitiges framework
-
----
 
 ---
 
@@ -225,34 +222,39 @@ Ausführung von React-Code auf Server/im Build ist kompliziert<!-- .element: cla
     * (hat bei mir beim letzten Versuch nur eingeschränkt funktioniert)
 * Verwendung ähnlich wie auch vom React Router (und `a`-Element) gewohnt:
   * `<Link href="/">Home</Link>`
-  * 
 ---
-### Eine React Server Komponente
+### Demo: Eine React Server Komponente
   * **Alle** Komponenten in Next.js sind per Default **Server Components**
     * Ausnahmen (Client Komponenten) müssen explizit gekennzeichnet werden (dazu später mehr)
-  * Landing-Page `/page.tsx`
-  * `/layout.tsx`
-    * `console.log` in `page`-Komponente
+  * <!-- .element: class="demo" --> Landing-Page `/page.tsx`
+  * <!-- .element: class="demo" -->`/layout.tsx`
+  * <!-- .element: class="demo" -->`console.log` in `page`-Komponente
 ---
 ### Übung: Vorbereitung
 
 * Zum Ausführen der Übungen bitte die benötigten Packages installieren
-* Das funktioneirt mit `pnpm` sollte aber auch mit einem anderen Package Manager verwenden
+* Das funktioniert mit `pnpm` sollte aber auch mit einem anderen Package Manager verwenden
 * Wenn Du kein `pnpm` hast, kannst Du den aktivieren, in dem Du `corepack enable` ausführst
 * Dann im Verzeichnis `blog-nextjs-workspace` ausführen:
   * `pnpm install`
   * `pnpm dev:clean`
 * Die leere Anwendung läuft dann auf Port 3000 (da gibt's aber erstmal noch nichts zu sehen...)
+- Achtung! Next.js hat sehr aggressives Caching eingebaut
+  - Wenn ihr "komisches" Verhalten feststellt, meine Empfehlung:
+    - `pnpm dev:clean` neu ausführen
+    - Im Browser neuen Tab öffnen, oder in den Dev Tools Caching ausschalten oder Inkognito Modus verwenden
 
 ---
 ### Übung: Getting started!
 * Baue eine LandingPage (`/`-Route)
-* Die muss nicht hübsch sein (wenn Du willst kannst Du CSS-Modules und/oder Tailwind für Styling verwenden)
+* Die muss nicht hübsch sein (wenn Du willst, kannst Du CSS-Modules und/oder Tailwind für Styling verwenden)
 * Die Komponente soll einen Link auf `/blog` rendern 
   * Verwende dazu die `Link`-Komponente des Next.js Routers
 * Füge außerdem ein `console.log`-Statement in deine Komponente hinzu, das beim Rendern die aktuelle Uhrzeit ausgibt
 * Lege außerdem eine Komponente für `/blog` an
-  * Es reicht, wenn diese Komponente erstmal nur "Hello World" ausgibt. 
+  * Es reicht, wenn diese Komponente erstmal nur "Hello World" ausgibt.
+* Wenn Du magst, kannst Du ein paar Experimente am gemeinsamen Layout für die beiden Komponenten machen
+  * Findest Du die entsprechende Datei? 🕵️
 * Wenn die Seite fertig ist:
   * Baue die "Anwendung" (`pnpm build`)
   * Starte die _fertige_ Anwendung, die auf Port 3080 läuft (`pnpm start`)
@@ -399,13 +401,14 @@ Ausführung von React-Code auf Server/im Build ist kompliziert<!-- .element: cla
     return <Post post={blogPost} />;
   }
   ```
+* <!-- .element: class="demo" -->Beispiel zeigen. Suspense-Verhalten ?! 
 ---
 ### Dynamische und statische Routen
 * Durch die Verwendung eines Platzhalters wird eine Route zu einer dynamischen Route, d.h. sie wird **nicht** im Build gerendert, sondern **nur** zur Laufzeit
   * Next.js kann hier nicht im Vorwege wissen, welche Werte für das variable Segment verwendet werden
   * Mit `getStaticPaths` kann das geändert werden
 * Auch die Verwendung einiger Next.js APIs führt dazu, dass eine Route nicht mehr statisch, sondern dynamisch ist
-  * Das betrifft Funktionen, die mit Daten aus einem Request arbeiten (`headers()` und `cookies()`) 
+  * Das betrifft Funktionen, die mit Daten aus einem Request arbeiten (`headers()` und `cookies()`)
 * Ggf. wird das Ergebnis auf dem Server gecached
 
 
@@ -449,14 +452,6 @@ Ausführung von React-Code auf Server/im Build ist kompliziert<!-- .element: cla
   * In der `Comments`-Komponente wird auf die Daten gewartet (`await commentsRequestPromise`)
   * Um die `Comments`-Komponente herum wird eine `Suspense`-Komponente gelegt.
 
-
----
-### Caching
-- Next.js hat sehr aggressives Caching eingebaut
-- Statische Routen werden gecached, bis sie explizit invalidiert werden (also prinzipiell unendlich lange)
-- Ergebnisse von fetch-Aufrufen werden implizit gecached (!)
-- 
-- Meiner Erfahrung nach ist das nicht trivial zu verstehen und scheint auch noch Bugs zu haben
 
 ---
 ### Übung: Suspense und Streaming
@@ -619,14 +614,36 @@ Ausführung von React-Code auf Server/im Build ist kompliziert<!-- .element: cla
 * Die Search-Parameter verwendest Du dann in `(content)/page.tsx`, um damit zu ermitteln, wie sortiert/nach was gesucht werden soll.
 * Deine Client-Komponte kannst Du einfach in `(content)/page.tsx` einbinden
 * Analysier doch mal mit Hilfe von `console.log` bzw. der Ausgabe auf der Konsole des `backend`-Prozesses, wann neu gerendert wird
-<!-- .element: class="todo" -->use defer?
 
 ---
 ### useTransition
-<!-- .element: class="todo" -->Weiter nach hinten => dann machen wir das für Speichern und Laden in einem
-* Wie stellen wir sicher, dass der Loading Indikator kommt, während neu sortiert / gefiltert wird
-* Umsetzen der Parameter in Transition verpacken
-
+* <!-- .element: class="demo" -->: `OrderByButton` mit Transition
+* Mit dem `useTransition`-Hook von React (18) können Updates priorisiert werden
+* Dazu wird eine Funktion angegeben, in der eine "Transition" beschrieben ist (z.B. durch das Setzen eines States)
+* Wenn React die Komponente daraufhin neu rendert, **und** eine weitere/andere State-Änderung durchgeführt wird, bricht React das rendern ab (und startes es ggf. später neu)
+* Mit `useTransition` kann also ausgedrückt werden: dieses Rendern ist nicht so "wichtig" (nicht so "dringend")
+* Mit Client-seitigem React kann auf diese Weise zum Beispiel sichergestellt werden, dass Updates, die durch Benutzer-Eingaben entstehen, nicht vom Rendern eines Suchergebnisses unterbrochen werden
+  * Hier wäre das Aktualisieren des Suchergebnisses weniger "dringend", als die Darstellung der aktualisierten Eingabe
+* Der `useTransition`-Hook liefert zwei Parameter zurück:
+  * `const [isPending, startTransition] = useTransition()`
+* Mit `startTransition` kann die Transition gestartet werden (Funktion übergeben)
+* `isPending` liefert zurück, ob die Transition gerade läuft
+---
+### Beispiel: useTransition mit Suspense
+* Wenn man einen von einer Seite auf eine andere Seite mit dem Next.js Router durchführt, kann man mit `useTransition` auf der Ursprungsseite bleiben, bis die Ziel-Seite fertig gerendert ist
+  * Die Ziel-Seite wird dann in Hintergrund gerendet, und solange ist `isPending` `true`
+* ```tsx
+  export function OrderByButton() {
+    const router = useRouter();
+    const [isPending, startTransition] = useTransition();
+  
+    const handleClick = () => {
+      startTransition( () => router.push("/..."));
+    }
+  
+    return isPending ? <button>Sorting...</button> : <button onClick={handleClick}>Order by date</button>;
+  }
+  ```
 ---
 ### Next.js: Caching
 
@@ -635,6 +652,11 @@ Ausführung von React-Code auf Server/im Build ist kompliziert<!-- .element: cla
   * Wenn du `fetch` in deinem Code verwendest, werden die GET-Requests von Next.js gecached!
 * Das kann man alles ausschalten, aber es ist am Anfang gewöhnungsbedürftig
   * Deswegen auch das `dev:clean`-Script in der `package.json`
+- Meiner Erfahrung nach ist das nicht trivial zu verstehen und scheint auch noch Bugs zu haben
+- Es gibt eine [ausführlichen Dokumentation](https://nextjs.org/docs/app/building-your-application/caching), welche Caches es gibt und wie die jeweils funktionieren
+  - Darin enthalten ist auch eine [Matrix](https://nextjs.org/docs/app/building-your-application/caching#apis), aus der hervorgeht, welche Next.js Funktionen Auswirkungen auf den Cache haben
+  - 👨‍🏫 Morgen machen wir eine Klassenarbeit, dann frage ich die Matrix ab 😈
+
 
 ---
 ### Next.js: Caching
@@ -685,40 +707,162 @@ Ausführung von React-Code auf Server/im Build ist kompliziert<!-- .element: cla
   * Mangels State auf dem Client geht das aber nicht wie bislang
   * Der **Server** muss nach Datenänderungen **aktualisierte UI** liefern 
 ---
-## 
+### UI bzw. Routen aktualisieren (Next.js spezifisch)
 
 * Möglichkeit 1:
   * Client-seitig kann man mit [`Router.refresh`](https://nextjs.org/docs/app/api-reference/functions/use-router#userouter) die aktuelle Route - unabhängig vom Cache - aktualsieren lassen. Next.js rendert die Route dann auf dem Server neu und liefert aktualisierte UI
 * Möglichkeit 2:
   * Invalidieren des Caches mit `revalidatePath` bzw. `revalidateTags`
+* Möglichkeit 3:
+  * `noStore()` verwenden, damit wird eine Route vom Caching ausgenommen
+  * Das scheint aber aber nur zu funktionieren, wenn eine Route erneut vom Browser abgefragt wird. Wenn eine Route bereits im **Client-Cache** ist, wird diese ausgeliefert
 ---
 ### Server Actions
 
 * **Server Actions** sind (asynchrone) Funktionen, die auf dem Server aufgerufen und aus einer (Client-)Komponente aufgerufen werden können
   * Eine Art remote-procedure Call
   * React bzw. Next.js stellt für jede Server-Action-Funktion transparent einen HTTP-Endpunkt zur Verfügung
-  * Der Aufruf erfolgt aus der Komponente wie bei einer normalen Funktion
   * Die Funktion kann beliebige Parameter entgegen nehmen und zurückliefern
     * Einschränkung: Werte müssen serialiserbar sein
-  * 
+  * ```typescript
+    export async function savePost(title: string, body: string) {
+      try {
+      await db.save(title, body);
+      } catch (e) {
+        return { success: false, error: e.toString() };
+      }
+  
+      return { success: true };
+    }
+    ```
+  * Der Aufruf erfolgt aus der Komponente wie bei einer normalen Funktion
+  * ```typescript
+    function PostEditor() {
+      const onSaveClick = async () => {
+        // SERVER REQUEST ! 
+        savePost(title, body) 
+      };
+    
+      // ...
+    }
+    ```
+  
 
+---
+### Server Actions
+* Server-Actions können als Inline-Funktion direkt innerhalb einer **Server Komponente** implementiert werden
+  * Dann muss die Funktion mit der Direktive `"use server"` gekenntzeichnet werden
+  * Die Funktion kann dann als Property an eine Client-Komponente weitergegeben werden
+  * ```typescript
+    // RSC
+    export default async function PostEditorPage() {
+      async function savePost(title: string, body: string) {
+        "use server";
+        // ...
+      } 
+    
+      return <PostEditor savePost={savePost} />
+    }
+    ```
+  * ```typescript
+    "use client"
+    
+    type Props = { savePost: (title: string, body: string) => Promise<Result> }
+    
+    export function PostEditor({savePost}: Props) {
+      const handleSave = async () => {
+        // SERVER REQUEST!
+        await savePost(title, body);
+        router.refresh();
+      }
+    } 
+    ```    
+---
+### Server Actions
+* In **Client Komponenten** können *keine* Server Actions implementiert werden. Alternativ können sie aber in einer eigenen Datei implementiert werden.
+* Dann muss diese Datei mit `"use server"` gekennzeichnet weden.
+* In dem Fall werden **alle** exportierten Funktionen in der Datei als Server Actions interpretiert (und entsprechende Endpunkte zur Verfügung gestellt)
+* ```typescript
+  // blog-server.actions.ts
+  "use server"
+  export async function savePost(title: string, body: string) { /* ... */ }
+  export async function deletePost(postId: string) { /* ... */ }
+  ```
+* Eine Client Komponente darf die Server Actions dann importieren und verwenden
+  * ```typescript
+    "use client";
+  
+    import { savePost } from "./blog-server.actions.ts"
+  
+    export function PostEditor() {
+      const onSaveClick = async () => {
+        // SERVER REQUEST !
+        await savePost(title, body);
+    
+        router.refresh();
+      };
+    
+      // ...  
+    }
+    ```
+---
+### Server Actions
+Schöne neue Welt? 🤔
 
+<img src="slides/images/server-actions.png" style="height: 900px">
 
-### useTransition (React 18)
-
-
-### Spezialisierte Server Action: Form Action
+https://twitter.com/AdamRackis/status/1717607565260124613
+---
 
 ### Übung: Server Actions
 
+* Vervollständige die PostEditor-Komponente!
+* Füge eine neue Route (`/add`) hinzu. In der Routen-Komponente (`page.tsx`) gibst du einfach die (fast fertige) `PostEditor`-Komponente zurück
+* In der `PostEditor`-Komponente musst du das Speichern implementieren, wenn auf den `Save`-Button gedrückt wird
+* Zum speichern muss deine Server Action aufgerufen werden. Nach dem Aufruf der Server Actions kannst Du mit `router.push("/blog")` zur Übersichtsseite wechseln. Dein neuer Post sollte hier angezeigt werden.
+  * Den `router` bekommst Du mit dem `useRouter`-Hook von Next.js
+* In der Datei `server-actions.ts` musst Du die zugehörige Server Action-Funktion implementieren:
+  * Diese muss `title` und `body` aus dem Formular entgegen nehmen
+  * Den Post kannst Du in der Server Action mit der fertigen Funktion `savePostToBackend` speichern
+  * Wenn die Daten gespeichert wurden, musst Du Next.js anweisen, den Cache neu zu machen. Dazu verwende bitte: `revalidateTag("teaser")` in der Server Action
+* 
 
 
+---
+## Formulare
 
-### Form Hooks
+* Mit Next.js (bzw. künftigen React APIs) soll es möglich sein, Formulare so zu bauen, dass man sie auch ausfüllen und absenden kann, wenn kein JavaScript im Browser läuft (**Progressive enhancement**)
+* Wofür könnte das relevant sein? 🤔
+* Welche Einschränkungen könnte es dabei geben? 🤔
 
-* Zum Arbeiten mit Formularen sind drei neue Hooks in Arbeit
-* Diese sollen auch **Progressive Enhancement** ermöglichen, also dafür sorgen, dass Formulare auch abgeschickt werden können, wenn kein JavaScript im Client läuft
-  * Wann könnte das relevant sein? 🤔
+---
+### Formulare
+* Um Formulare ohne JavaScript absenden zu können, muss es genauso aussehen, als wenn man ein Formular in einer statischen HTML-Seite beschreibt: 
+  * dazu muss ein HTML `form`-Element mit einem `action`-Attribute verwendet werden
+  * Damit das Formular abgesendet werden kann, muss es einen `submit`-Button geben
+* In "regulärem" HTML wird der Form-Inhalt dann an den in der `action` angegebenen Endpunkt geschickt
+* Der Payload ist ein `FormData`-Objekt
+* Mit Next.js (bzw. React) können wir als `action` eine Server-Action-Funktion angeben
+* Die angegebene Server Action muss als Parameter ein `FormData`-Objekt entgegennehmen
+* ```tsx
+    export function PostEditor() {
+      async function saveForm(data: FormData) {
+        "use server"
+        // AUF DEM SERVER: Formular speichern
+        const title = data.get("title");
+        // ...
+      }
+  
+      return <form action={saveForm}>
+        <input name="title" />
+        <input name="body" />
+      </form>
+    }
+  ```
+---
+### Formulare: Hooks
+* Zur arbeit mit Formularen, die mittels progressive enhancement umgesetzt werden sollen, gibt es auch noch eine Reihe neuer Hooks, die dafür sorgen, dass das Formular (eingeschränkt) ohne JavaScript funktioniert.
+* Ist JavaScript aktiv und der Code geladen, werden dann weitere Features angeboten
 * [useFormState](https://react.dev/reference/react-dom/hooks/useFormState): Hält die Daten eines Formulars (ähnlich wie lokaler State), funktioniert aber ohne JavaScript
 * [useFormStatus](https://react.dev/reference/react-dom/hooks/useFormStatus): Liefert einen Status zurück, ob ein Formular gerade submitted wird (z.B. um den Speichern-Button zu disablen, während das Speichern läuft)
 * [useOptimistic](https://react.dev/reference/react/useOptimistic): Eine Art lokaler State, dem man vorrübergehend einen "angenommenen" Wert übergeben kann, solange ein asynchrone Operation läuft. Man kann damit schon das (erwartet) Ergebnis der asynchronen Operation "simulieren", um dem Benutzer schneller Feedback zu geben.
