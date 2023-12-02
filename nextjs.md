@@ -235,10 +235,10 @@ Ausführung von React-Code auf Server/im Build ist kompliziert<!-- .element: cla
 * Zum Ausführen der Übungen bitte die benötigten Packages installieren
 * Das funktioniert mit `pnpm` sollte aber auch mit einem anderen Package Manager verwenden
 * Wenn Du kein `pnpm` hast, kannst Du den aktivieren, in dem Du `corepack enable` ausführst
-* Dann im Verzeichnis `blog-nextjs-workspace` ausführen:
+* Dann im Verzeichnis `nextjs/nextjs-workspace` ausführen:
   * `pnpm install`
   * `pnpm dev:clean`
-* Die leere Anwendung läuft dann auf Port 3000 (da gibt's aber erstmal noch nichts zu sehen...)
+* Die leere Anwendung läuft dann auf http://localhost:3000 (da gibt's aber erstmal noch nichts zu sehen...)
 - Achtung! Next.js hat sehr aggressives Caching eingebaut
   - Wenn ihr "komisches" Verhalten feststellt, meine Empfehlung:
     - `pnpm dev:clean` neu ausführen
@@ -247,18 +247,22 @@ Ausführung von React-Code auf Server/im Build ist kompliziert<!-- .element: cla
 ---
 ### Übung: Getting started!
 * Baue eine LandingPage (`/`-Route)
-* Die muss nicht hübsch sein (wenn Du willst, kannst Du CSS-Modules und/oder Tailwind für Styling verwenden)
+* Die muss nicht hübsch sein
+  * wenn Du willst, kannst Du CSS-Modules und/oder Tailwind für Styling verwenden
+  * unter `shared` findest Du auch ein paar Basis-Komponenten (Button, Überschriften etc.)
 * Die Komponente soll einen Link auf `/blog` rendern 
   * Verwende dazu die `Link`-Komponente des Next.js Routers
 * Füge außerdem ein `console.log`-Statement in deine Komponente hinzu, das beim Rendern die aktuelle Uhrzeit ausgibt
 * Lege außerdem eine Komponente für `/blog` an
   * Es reicht, wenn diese Komponente erstmal nur "Hello World" ausgibt.
+  * Die `page.tsx`-Datei soll in das Verzeichnis `app/(content)/blog/page.tsx`
 * Wenn Du magst, kannst Du ein paar Experimente am gemeinsamen Layout für die beiden Komponenten machen
   * Findest Du die entsprechende Datei? 🕵️
 * Wenn die Seite fertig ist:
   * Baue die "Anwendung" (`pnpm build`)
   * Starte die _fertige_ Anwendung, die auf Port 3080 läuft (`pnpm start`)
   * Wann und wo wird dein `console.log` ausgegeben?
+* Mögliche Lösung findet ihr in `steps/10_getting_started`
 
 ---
 ## Data Fetching
@@ -348,7 +352,7 @@ Ausführung von React-Code auf Server/im Build ist kompliziert<!-- .element: cla
   * Darin mit `getBlogTeaserList` die Daten laden und anzeigen
     * Zur Darstellung der geladenen Posts kannst Du die Komponente `PostTeaser` verwenden oder was eigenens bauen
   * Was passiert, wenn die Daten nur sehr langsam geladen werden?
-    * Verlangesame dazu den Zugriff auf die Datenbank künstlich, in dem Du in `backend-queries.ts` mit der Konstante `getBlogTeaserListSlowdown` eine künstliche Verzögerung festlegst (in Millisekunden, z.B. 1600)
+    * Verlangsame dazu den Zugriff auf die Datenbank künstlich, in dem Du in `backend-queries.ts` mit der Konstante `getBlogTeaserListSlowdown` eine künstliche Verzögerung festlegst (in Millisekunden, z.B. 1600)
   * Füge eine Loading-Komponente (`loading.tsx` hinzu), die eine Warte-Meldung ausgibt
 
 ---
@@ -425,7 +429,7 @@ Ausführung von React-Code auf Server/im Build ist kompliziert<!-- .element: cla
 * Die `BlogPostPage`-Komponente benötigt Daten aus zwei Quellen: Den Blog-Post und die Kommentare
 * Die Antwortzeit der beiden Requests dafür kann bei jedem Aufruf unterschiedlich lang sein
 * In einer klassischen React-Architektur könnte es zu einem "Request-Wasserfall" kommen:
-  * BlogPost lädt den Artikel (z.B.  `useFetch`) und rendert sich dann damit
+  * BlogPost lädt den Artikel (z.B. `useFetch`) und rendert sich dann damit
   * Beim rendern bindet sie die `Comments`-Komponente ein. Diese lädt nun (ebenfalls) per `fetch` ihre Daten und stellt sich dar.
   * Die beiden Requests starten also nicht zeitgleich, und die Dauer, bis die Daten vollständig angezeigt werden können, setzt sich aus der Dauer der **beiden** Requests zusammen
 * Kennt ihr das Problem? Meint ihr das ist ein Problem? Was könnte man dagegen tun 🤔
@@ -456,7 +460,7 @@ Ausführung von React-Code auf Server/im Build ist kompliziert<!-- .element: cla
 ---
 ### Übung: Suspense und Streaming
 
-* Implementiere die Route zur Darstellung eines einzelnen BlogPosts (`/app/blog/[postId]/page.tsx`)
+* Implementiere die Route zur Darstellung eines einzelnen BlogPosts (`/app/blog/(content)/post/[postId]/page.tsx`)
 * Lade in der Komponente die Daten des Artikels und dessen Kommentare
   * Dazu kannst Du aus `backend-queries.ts` die Funktionen `getBlogPost` und `getComments` verwenden
 * Zeige die geladenen Daten an (Du kannst die `Post` bzw `CommentList`-Komponente verwenden)
@@ -551,10 +555,14 @@ Ausführung von React-Code auf Server/im Build ist kompliziert<!-- .element: cla
 
 * Auf der **Server-Seite**:
   * Statt "klassischer" Props werden hier nun Search Params verwendet
-  * Page/Top-Level-Komponenten in Next.js können sich die Search-Parameter  als Property `searchParams` übergeben lassen 
+  * Page/Top-Level-Komponenten in Next.js können sich die Search-Parameter als Property `searchParams` übergeben lassen 
 * ```typescript
+  
+  type BlogListPageProps = {
+    searchParams: { order_by?: OrderBy };
+  };
 
-  export default async function BlogListPage({ searchParams }) {
+  export default async function BlogListPage({ searchParams }: BlogListPageProps) {
     const orderBy = searchParams.order_by || "desc";
   
     const response = await getBlogTeaserList(orderBy);
@@ -603,15 +611,18 @@ Ausführung von React-Code auf Server/im Build ist kompliziert<!-- .element: cla
 
 
 ---
-### Übung
+### Übung: Interaktionen
 
-* Order By Button oder Filter
-* Die Blog Liste (`(content)/page.tsx`) verwendet `getBlogTeaserList`, um Daten aus dem Backend zu lesen
+* Implementiere den **Order By-Button** oder einen **Such-Filter**
+* Die Blog-Liste (`(content)/page.tsx`) verwendet `getBlogTeaserList`, um Daten aus dem Backend zu lesen
 * Du kannst `getBlogTeaserList` `orderBy` und/oder `filter` übergeben
 * Implementiere also entweder einen Button zum Sortieren oder ein Text-Feld, mit dem man einen Filter (Suche) übergeben kann
   * Zum Testen des Filters kannst Du z.B. den Ausdruck `redux` verwenden, dann müssten zwei Artikel zurückkommen
 * In jedem Fall musst Du eine **Client-Komponente** erzeugen, die in der Lage ist, die Search-Parameter der Anwendung zu verändern
 * Die Search-Parameter verwendest Du dann in `(content)/page.tsx`, um damit zu ermitteln, wie sortiert/nach was gesucht werden soll.
+  * Den aktuell gerenderten Pfad (URL ohne Search-Parameter) bekommst Du mit dem Next.js Hook (`usePathname`)[https://nextjs.org/docs/app/api-reference/functions/use-pathname]
+  * An die aktuellen Search-Parameter kommst Du mit dem Next.js Hook [`useSearchParams`](https://nextjs.org/docs/app/api-reference/functions/use-search-params)
+  * Einen Seitenwechsel kannst mit `router.push()` machen, wobei du `router` mit dem Next.js Hook [`useRouter()`](https://nextjs.org/docs/app/api-reference/functions/use-router) bekommst.
 * Deine Client-Komponte kannst Du einfach in `(content)/page.tsx` einbinden
 * Analysier doch mal mit Hilfe von `console.log` bzw. der Ausgabe auf der Konsole des `backend`-Prozesses, wann neu gerendert wird
 
@@ -817,7 +828,8 @@ https://twitter.com/AdamRackis/status/1717607565260124613
 ### Übung: Server Actions
 
 * Vervollständige die PostEditor-Komponente!
-* Füge eine neue Route (`/add`) hinzu. In der Routen-Komponente (`page.tsx`) gibst du einfach die (fast fertige) `PostEditor`-Komponente zurück
+* Füge eine neue Route (`/add`) hinzu. In der  zugehörigen Komponente (`page.tsx`) gibst du einfach die (fast fertige) `PostEditor`-Komponente zurück
+* In der Blog List musst Du einen `Link` auf `/add` hinzufügen, dass man den PostEditor über die Oberfläche öffnen kann.
 * In der `PostEditor`-Komponente musst du das Speichern implementieren, wenn auf den `Save`-Button gedrückt wird
 * Zum speichern muss deine Server Action aufgerufen werden. Nach dem Aufruf der Server Actions kannst Du mit `router.push("/blog")` zur Übersichtsseite wechseln. Dein neuer Post sollte hier angezeigt werden.
   * Den `router` bekommst Du mit dem `useRouter`-Hook von Next.js
@@ -861,7 +873,7 @@ https://twitter.com/AdamRackis/status/1717607565260124613
   ```
 ---
 ### Formulare: Hooks
-* Zur arbeit mit Formularen, die mittels progressive enhancement umgesetzt werden sollen, gibt es auch noch eine Reihe neuer Hooks, die dafür sorgen, dass das Formular (eingeschränkt) ohne JavaScript funktioniert.
+* Zur Arbeit mit Formularen, die mittels progressive enhancement umgesetzt werden sollen, gibt es auch noch eine Reihe neuer Hooks, die dafür sorgen, dass das Formular (eingeschränkt) ohne JavaScript funktioniert.
 * Ist JavaScript aktiv und der Code geladen, werden dann weitere Features angeboten
 * [useFormState](https://react.dev/reference/react-dom/hooks/useFormState): Hält die Daten eines Formulars (ähnlich wie lokaler State), funktioniert aber ohne JavaScript
 * [useFormStatus](https://react.dev/reference/react-dom/hooks/useFormStatus): Liefert einen Status zurück, ob ein Formular gerade submitted wird (z.B. um den Speichern-Button zu disablen, während das Speichern läuft)

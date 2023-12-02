@@ -5,13 +5,13 @@ import LoadingIndicator from "@/app/shared/components/LoadingIndicator";
 import CommentList from "@/app/shared/blog/CommentList";
 import { notFound } from "next/navigation";
 
-type BlogPostPageRouteProps = {
+type PostPageProps = {
   params: { postId: string };
 };
 
-export default async function BlogPostPageRoute({
+export default async function PostPage({
   params,
-}: BlogPostPageRouteProps) {
+}: PostPageProps) {
   const postId = params.postId;
   const commentsPromise = getComments(postId);
   const post = await getBlogPost(postId);
