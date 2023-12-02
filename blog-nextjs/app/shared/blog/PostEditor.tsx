@@ -37,6 +37,9 @@ export default function PostEditor() {
   }
 
   async function handleSave() {
+    // startTransition funktioniert hier leider nicht (mehr) 😢,
+    // es wird IMMER die /blog-Route aufgerufen und
+    // dort dann die fallback-Komponente angezeigt
     startTransition(async () => {
       const result = await addPost(title, body);
       if (result.status === "success") {

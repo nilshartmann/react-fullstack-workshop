@@ -50,17 +50,17 @@ export async function getBlogTeaserList({
   }
 
   if (getBlogTeaserListSlowdown) {
-    searchParams.set("slowDown", getBlogPostSlowdown);
+    searchParams.set("slowDown", getBlogTeaserListSlowdown);
   }
 
-  const r = await fetch(
-    `http://localhost:7002/posts?teaser&${searchParams.toString()}`,
-    {
-      next: {
-        tags: ["teaser"],
-      },
+  const url = `http://localhost:7002/posts?teaser&${searchParams.toString()}`;
+  console.log("Reading Teasers from", url);
+
+  const r = await fetch(url, {
+    next: {
+      tags: ["teaser"],
     },
-  );
+  });
 
   console.log(
     "Fetch request to external backend service returned timestamp",

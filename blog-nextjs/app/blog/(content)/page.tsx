@@ -31,7 +31,7 @@ export default async function BlogListPage({
   searchParams,
 }: BlogListRouteProps) {
   const orderBy = searchParams.order_by || "desc";
-  const filter = searchParams.filter || undefined
+  const filter = searchParams.filter || undefined;
 
   console.log("Render /blog");
   const response = await getBlogTeaserList({ orderBy, filter });
