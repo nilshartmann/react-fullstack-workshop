@@ -230,12 +230,23 @@ Ausführung von React-Code auf Server/im Build ist kompliziert<!-- .element: cla
   * <!-- .element: class="demo" -->`/layout.tsx`
   * <!-- .element: class="demo" -->`console.log` in `page`-Komponente
 ---
-### Übung: Vorbereitung
+### Übung: Vorbereitung #1
+
+* **Klonen des Repositories**
+  * Bitte klonen: https://nilshartmann.github.io/react-fullstack-workshop
+* Darin bitte das Verzeichnis `nextjs/nextjs-workspace` im Editor/IDE öffnen
+
+---
+### Übung: Vorbereitung #2
 
 * Zum Ausführen der Übungen bitte die benötigten Packages installieren
 * Das funktioniert mit `pnpm` sollte aber auch mit einem anderen Package Manager verwenden
 * Wenn Du kein `pnpm` hast, kannst Du den aktivieren, in dem Du `corepack enable` ausführst
-* Dann im Verzeichnis `nextjs/nextjs-workspace` ausführen:
+* Dann das Backend starten
+  * Verzeichnis: `backend`
+  * `pnpm install`
+  * `pnpm dev`
+* Dann Next.js im Verzeichnis `nextjs/nextjs-workspace` ausführen:
   * `pnpm install`
   * `pnpm dev:clean`
 * Die leere Anwendung läuft dann auf http://localhost:3000 (da gibt's aber erstmal noch nichts zu sehen...)
@@ -288,6 +299,11 @@ Ausführung von React-Code auf Server/im Build ist kompliziert<!-- .element: cla
 
 * <!-- .element: class="demo" -->DB-Zugriff mit `getBlogTeaserList`
 * <!-- .element: class="demo" -->statische Komponente bislang! Build! console.log!
+
+---
+## Exkurs: zod
+
+* Kennt ihr zod? https://zod.dev/  🤔
 
 ---
 ## Suspense
