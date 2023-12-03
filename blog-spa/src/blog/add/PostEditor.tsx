@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { addPost } from "../../shared/api/server-actions.ts";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useState, useTransition } from "react";
 import { isApiError } from "../../shared/api/api-error.ts";
 import Card from "../../shared/components/Card.tsx";
 import Message from "../../shared/components/Message.tsx";
@@ -11,11 +11,26 @@ import LoadingIndicator from "../../shared/components/LoadingIndicator.tsx";
 import { H2 } from "../../shared/components/Heading.tsx";
 import Post from "../(content)/post/[postId]/Post.tsx";
 
+type NewPost = {
+  title: string;
+  body: string;
+};
+
 export default function PostEditor() {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const addPostMutation = useMutation({
-    mutationFn: ({ title, body }: { title: string; body: string }) =>
-      addPost(title, body),
+    mutationFn: ({ title, body }: NewPost) => {
+      return addPost(title, body);
+    },
+    onSuccess: async (data) => {
+      await queryClient.refetchQueries({
+        queryKey: ["blog-list"],
+      });
+      // await queryClient.invalidateQueries({
+      //   queryKey: ["blog-list"],
+      // });
+    },
   });
 
   const isPending = addPostMutation.isPending;

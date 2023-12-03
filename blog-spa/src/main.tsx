@@ -1,4 +1,5 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import RootLayout from "./layout.tsx";
 import LandingPage from "./LandingPage.tsx";
@@ -10,7 +11,8 @@ import BlogContentLayout from "./blog/(content)/BlogContentLayout.tsx";
 import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
-const queryClient = new QueryClient();
+
+import { queryClient } from "./query-client.ts";
 
 const router = createBrowserRouter([
   {
@@ -43,6 +45,7 @@ const router = createBrowserRouter([
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
+      <ReactQueryDevtools initialIsOpen={false} />
       <RouterProvider router={router} />
     </QueryClientProvider>
   </React.StrictMode>,
