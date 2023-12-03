@@ -631,6 +631,10 @@
 ## mit loader und action-Funktionen
 
 ---
+## Beispiel-Anwendung
+* Identisches Setup wie TanStack Query: Frontend ist Frontend, Backend ist Backend
+
+---
 ## React Router
 
 * Seit Version 6 vom React Router gibt es in React Router das Konzept eines **DataRouters**
@@ -732,7 +736,23 @@
   ```
 
 ---
+### Übung: Vorbereitung
+* Wir arbeiten im Verzeichnis `datarouter/datarouter-workspace`
+* Dieses Verzeichnis in Editor/IDE öffnen
+* Darin Packages installieren und Vite starten:
+  * `pnpm install` 
+  * `pnpm dev`
+* Die Anwendung läuft auf http://localhost:3300
+---
 ### Übung: eine Loader-Funktion (PostListPage)
+* In der `PostListPage` fehlt die loader-Funktion!
+* Bitte implementiere die `loader`-Funktion (kannst Du direkt in `BlogListPage.tsx` machen)
+  * Verwende den `QueryClient` von TanStack Query
+  * Zum Laden der Daten mit der `queryFn`-Funktion kannst Du `getBlogTeaserList` aus `backen-queries.ts` verwenden
+* Gib die `loader`-Funktion in der Routen-Beschreibung in `main.tsx` an
+* Zeige die mit der `loader`-Funktion gelesenen Blog-Psts in der `BlogListPage`-Komponente an
+* Hinweis: in `shared/api/types.ts` findest Du TypeScript-Typen für die Objekte, die über die API gelesen werden (z.B. `BlogPostTeaser`, `BlogPost` und `Comment`)
+* Lösung: `steps/10-loader-function`
 
 ---
 ### defer
@@ -805,7 +825,18 @@
   ```
 
 ---
-### Übung: PostPage
+### Übung: BlogPostPage
+
+* Die Daten für die `BlogPostPage` werden schon gelesen, aber nicht verzögert
+* Stell die Loader-Funktion `blogPageLoader` (`BlogPostPage.tsx`) auf `defer` um, so dass Blog-Post und Kommentare als Promises zurückgegeben werden.
+* Baue die `BlogPostPage` so um, dass sie mit `Await` auf die beiden Promises wartet
+  * Das `Await` für die Blog-Post-Daten soll mit einer `children`-Funktion arbeiten
+  * Baue die `CommentList`-Komponente so um, dass sie `useAsyncValue` verwendet
+  * Welcher Ansatz gefällt dir besser? `children` oder `useAsyncValue`?
+* Kannst Du die `BlogPostPage` mit `Suspense` so bauen, dass der eigentlich Blog-Post schon angezeigt wird, auch wenn auf die Kommentare noch gewartet wird?
+  * Dazu die `slowDown`-Konstanten in `backend-queries.ts` setzen (SlowDown für Kommentare muss länger sein als SlowDown für Artikel)
+  * Beispiel: `const getBlogPostSlowdown = "?slowDown=1200"; const getCommentsSlowdown = "?slowDown=1600";`
+* Lösung: `steps/20_defer`
 
 ---
 ### Actions
