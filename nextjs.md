@@ -260,7 +260,7 @@ Ausführung von React-Code auf Server/im Build ist kompliziert<!-- .element: cla
 * Baue eine LandingPage (`/`-Route)
 * Die muss nicht hübsch sein
   * wenn Du willst, kannst Du CSS-Modules und/oder Tailwind für Styling verwenden
-  * unter `shared` findest Du auch ein paar Basis-Komponenten (Button, Überschriften etc.)
+  * unter `shared/components` findest Du auch ein paar Basis-Komponenten (Button, Überschriften etc.), die Du benutzen kannst, wenn Du möchtest
 * Die Komponente soll einen Link auf `/blog` rendern 
   * Verwende dazu die `Link`-Komponente des Next.js Routers
 * Füge außerdem ein `console.log`-Statement in deine Komponente hinzu, das beim Rendern die aktuelle Uhrzeit ausgibt
