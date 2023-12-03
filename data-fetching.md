@@ -294,13 +294,24 @@
    });
   }  
   ```
-* Validierung der Server-Antworten (und evtl. auch der Requests) mit Zod.  
+* Validierung der Server-Antworten (und evtl. auch der Requests) mit Zod.
+---
+### Übung: Vorbereitung
+* wir arbeiten jetzt in `spa/spa-workspace`
+* hierin bitte Packages installieren und Anwendung starten
+* `pnpm install`, `pnpm dev`
+* Die Anwendung läuft auf http://localhost:3200
+
 ---
 ### Übung: Blog Teaser mit TanStack Query lesen
-- Spiele mit refetchXyz-Einstellungen
-- Untersuche dabei auch `isFetched` und `isFetching`
-- Dazu Blog Liste anzeigen, dann Blog Post anzeigen und wieder zurück (per "Home"-Link) wechseln
-- Wann werden die Daten neu geladen?
+- Auf der Blog-Übersichtsseite fehlen die Daten 😱
+- Implementiere bitte die `BlogListPage`-Komponente. Der Rumpf der Komponente ist schon in ``BlogListPage.tsx` vorhanden. Es fehlt "nur" der Code zum Laden der Daten...
+- Als Query-Funktion kannst Du `getBlogTeaserList` aus `backend-queries.ts` angeben
+- Zeige eine Warte-Meldung an, während die Daten geladen werden
+  - Zum künstlichen Verzögern der Daten `getBlogTeaserListSlowdown` in  `backend-queries.ts` setzen
+- Spiele mit den `refetchXyz`-Einstellungen am Query
+  - Untersuche dabei auch `isFetching`
+  - Dazu am besten: Übersichtsseite aufrufen, dann einen Blog-Post anklicken und mit "Home"-Button oben wieder auf Übersichtsseite zurück. Wann werden (warum) Server Calls ausgeführt?
 
 
 
@@ -337,6 +348,32 @@
     return <PostEditor onSavePost={mutation.mutate} />;
   }
   ```
+---
+### Paramter für die mutation-Funktion
+
+* Die `mutationFn` kann genau einen Parameter annehmen (oder keinen)
+* Den Wert für diesen Parameter gibst Du beim Ausführen der Mutation an die `mutate`-Funktion
+  * (diese ruft die `mutationFn` dann ihrerseits mit diesem Parameter auf)
+* Damit kannst du z.B. die zu speichernden Daten übergeben
+* Wenn Du mehrere Informationen übergeben willst, musst Du ein Objekt übergeben
+* ```tsx
+  function PostEditor() {
+    const mutation = useMutation({
+      mutationFn: ({ title, body }: NewPost) => {
+        return addPost(title, body);
+      }
+      // ...
+    });  
+  
+  
+    const handleSave = () => {
+      mutation.mutate({
+        title: "...", body: "..."
+      })
+    }
+  }
+  ```
+
 ---
 ### MutateAsync
 
@@ -441,12 +478,15 @@
 ### Übung: Mutation
 
 * Vervollständige die `PostEditor`-Komponente
-* In der `handleSaveClick`-Funktion soll eine Mutation ausgeführt werden, die du implementieren musst
+* In der `handleSave`-Funktion soll eine Mutation ausgeführt werden, die du implementieren musst
   * Die Mutation kann als `queryFn` die Funktion `addPost` aus `server-actions.ts` verwenden, um das Post auf dem Server zu speichern
   * Wenn die Mutation fehlschlägt, sollte im PostEditor eine Fehlermeldung angezeigt werden
     * Das kannst Du testen, in dem du einen `title` eingibst bzw. speicherst, der weniger als fünf Zeichen lang ist.
+    * Wenn der Benutzer nach dem fehlerhaften Speichern Änderungen macht (Eingabe in eins der Eingabefelder) soll die Fehlermeldung wieder verschwinden 
   * Wenn die Mutation erfolgreich war, soll zur `/blog`-Übersichtsseite navigiert werden (dafür kannst Du [`useNaviagate`](https://beta.reactrouter.com/en/main/hooks/use-navigate) vom React Router verwenden)
-  * Der neue, gespeicherte Blog Post soll auf der `/blog`-Übersichtsseite natürlich dann auch sichtbar sein...
+  * Kannst Du einen Custom Hook für die Mutation schreiben (`useSavePostMutation`) ?
+    * Die Navigation soll *nicht* Bestandteil des Hooks sein
+  * Der neue, gespeicherte, Blog Post soll auf der `/blog`-Übersichtsseite natürlich dann auch sichtbar sein...
 
 ---
 ## TanStack Query mit Suspense
@@ -479,6 +519,7 @@
 - Wenn der Query zu dem Zeitpunkt bereits einmal ausgeführt wurde, und sich Daten dafür im Cache befinden, werden zunächst diese alten Daten angezeigt
   - Der `placeholder` wird dann **nicht angezeigt**, da aus Supsene-Sicht auf keine Daten gewartet wird
 - `useQuery` und `useSuspenseQuery`-Hook liefern das Property `isFetching` zurück, mit dem Du erkennen kannst, ob im Hintergrund gerade deine Daten aktualisiert werden
+- Fehler werden über einen **Error Boundary** behandelt
 - Damit kannst Du z.B. einen Loading Spinner oder einen anderen Hinweis anzeigen, wenn die Daten neu geladen werden
 * ```tsx
   function BlogListPage() {
@@ -499,10 +540,11 @@
 
 - Stelle die PostListPage auf `useSuspenseQuery` um
 - Du musst außerdem ein `Suspense`-Boundary festlegen.
+- Wenn Du den Aufruf des Queries verzögerst (`getBlogTeaserListSlowdown` in `backend-queries.ts`) und zwischen Blog Post-Ansicht und Übersichtsseite wechselt, was passiert dann?
 - Stelle die beiden `useQuery`-Aufrufe in `BlogPostPage` und `CommentList` um, die ein einzelnes BlogPost bzw. dessen Kommentare darstellen
   - Für die beiden Queries ist in `BlogPostPageRoute` schon ein `Suspense`-Boundary definiert
   - Diese Komponente (`BlogPostPageRoute`) ist in der Router-Konfiguration für `/blog/:postId]` gemappt
-- Was passiert, wenn Du dann um den Aufruf der `CommentList`-Komponente ein `Suspense` legst?
+- Was passiert, wenn Du dann um den Aufruf der `CommentList`-Komponente (k)ein `Suspense` legst?
 - Zum besseren Testen kannst Du die Aufrufe des Backends in der Datei `backend-queries.ts` verzögern (s. Konstanten am Anfang der Datei):
   - `getBlogTeaserListSlowdown`: Blog Übersichtsseite
   - `getBlogPostSlowdown`: lesen eines Einzelnen Blog Posts

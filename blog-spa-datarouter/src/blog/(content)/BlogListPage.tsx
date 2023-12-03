@@ -13,7 +13,7 @@ export const blogListPageLoader: LoaderFunction = ({ request }) => {
   return defer({
     blogTeaserListPromise: queryClient.fetchQuery({
       queryKey: ["blog-list", orderBy],
-      queryFn: () => getBlogTeaserList({orderBy}),
+      queryFn: () => getBlogTeaserList({ orderBy }),
     }),
   });
 };
