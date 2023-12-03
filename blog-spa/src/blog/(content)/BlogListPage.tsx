@@ -11,7 +11,7 @@ export default function BlogListPage({ orderBy }: BlogListPageProps) {
   console.log("Render /blog", orderBy);
   const { data } = useSuspenseQuery({
     queryKey: ["blog-list", orderBy],
-    queryFn: () => getBlogTeaserList(orderBy),
+    queryFn: () => getBlogTeaserList({orderBy}),
   });
 
   return (

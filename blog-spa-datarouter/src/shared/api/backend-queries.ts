@@ -12,8 +12,8 @@ import { micromark } from "micromark";
 // ---------------------------------------------------------------------------------------------------
 // -- Simulate slowness
 // ---------------------------------------------------------------------------------------------------
+const getBlogTeaserListSlowdown = ``; // `1600`
 const getTagsSlowdown = ``; // `?slowDown=2400`;
-const getBlogTeaserListSlowdown = ``; // `&slowDown=1600`
 const getBlogPostSlowdown = ``; // `?slowDown=2400`
 const getCommentsSlowdown = ``; // `?slowDown=2400`
 
@@ -32,13 +32,31 @@ export async function getTags(): Promise<GetTagsResponse> {
 // -- getBlogTeaserList
 // ---------------------------------------------------------------------------------------------------
 
-export async function getBlogTeaserList(orderBy: OrderBy = "desc") {
+type GetBlogTeaserListParams = {
+  orderBy?: OrderBy;
+  filter?: string;
+};
+
+export async function getBlogTeaserList({
+                                          orderBy = "desc",
+                                          filter,
+                                        }: GetBlogTeaserListParams = {}) {
   console.log("Starting fetch to external backend service");
-  const r = await fetch(
-    `http://localhost:7002/posts?teaser&order_by=${encodeURIComponent(
-      orderBy,
-    )}${getBlogTeaserListSlowdown}`,
-  );
+
+  const searchParams = new URLSearchParams();
+  searchParams.set("order_by", orderBy);
+  if (filter) {
+    searchParams.set("filter", filter);
+  }
+
+  if (getBlogTeaserListSlowdown) {
+    searchParams.set("slowDown", getBlogTeaserListSlowdown);
+  }
+
+  const url = `http://localhost:7002/posts?teaser&${searchParams.toString()}`;
+  console.log("Reading Teasers from", url);
+
+  const r = await fetch(url);
 
   console.log(
     "Fetch request to external backend service returned timestamp",
