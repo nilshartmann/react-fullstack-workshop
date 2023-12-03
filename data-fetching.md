@@ -515,6 +515,7 @@
   ```
 ---
 ## TanStack Query mit Suspense
+<!-- .slide: class="left" -->
 - Mit den default `refetch`-Einstellungen wird ein Query erneut ausgeführt, wenn eine Komponente gemounted wird, oder das Fenster den Focus bekommt
 - Wenn der Query zu dem Zeitpunkt bereits einmal ausgeführt wurde, und sich Daten dafür im Cache befinden, werden zunächst diese alten Daten angezeigt
   - Der `placeholder` wird dann **nicht angezeigt**, da aus Supsene-Sicht auf keine Daten gewartet wird
@@ -558,7 +559,9 @@
   1. die Artikel werden gelesen und
   2. **erst danach** wird die `CommentList` gerendert und darin werden die Kommentare gelesen
 * Um die Darstellung zu beschleunigen, wäre es hilfreich, wenn beide Queries zeitgleich starten würden
-* Dazu können wir die Funktion [`QueryClient.ensureQueryData`](https://tanstack.com/query/v5/docs/react/reference/QueryClient#queryclientensurequerydata) verwenden
+---
+### Prefetching von Queries
+* Zum "Vorladen" von Daten können wir die Funktion [`QueryClient.ensureQueryData`](https://tanstack.com/query/v5/docs/react/reference/QueryClient#queryclientensurequerydata) verwenden
 * Diese erwartet dieselben Angaben wie `use(Suspense)Query`, nämlich u.a. `queryKey` und `queryFn`
 * Wenn sie ausgeführt wird, und für den angegeben `queryKey` noch keine Daten im Cache sind, lädt die Funktion die Daten im Hintergrund
 * Damit können wir in der `BlogListPage` schon das Laden der Daten triggern. Wenn dann die `CommentList` gerendert wird, sind die Daten evtl. schon im Cache, aber zumindest läuft der Request schon

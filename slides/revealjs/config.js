@@ -42,14 +42,14 @@ Reveal.initialize({
     // As a presenter I don't need controls but fragments
     Reveal.configure({ controls: false, fragments: true });
 
-//    // every 'li' should become a fragment
-//    document.querySelectorAll("li").forEach((n) => n.classList.add("fragment"));
-//
-//    // ...but not really every (remove all 'fragments' from elements that are marked with 'no-fragment'
-//    //    and THEIR CHILDREN)
-//    document
-//      .querySelectorAll(".no-fragment, .no-fragment *")
-//      .forEach((n) => n.classList.remove("fragment"));
+    // every 'li' should become a fragment
+    document.querySelectorAll("li").forEach((n) => n.classList.add("fragment"));
+
+    // ...but not really every (remove all 'fragments' from elements that are marked with 'no-fragment'
+    //    and THEIR CHILDREN)
+    document
+      .querySelectorAll(".no-fragment, .no-fragment *")
+      .forEach((n) => n.classList.remove("fragment"));
 //
 //    // when using code blocks with markdown like this:
     //  ```java fragment
