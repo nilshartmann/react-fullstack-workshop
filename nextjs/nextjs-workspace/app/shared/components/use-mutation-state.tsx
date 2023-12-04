@@ -31,9 +31,7 @@ const emptyState = {
   isSuccess: false,
 } as const;
 
-export function useMutationState<
-  ApiResponseType extends ActionResponse<any>,
->() {
+export function useMutationState<ApiResponseType extends ActionResponse>() {
   const [state, setState] =
     useState<ResponseState<ApiResponseType>>(emptyState);
 
