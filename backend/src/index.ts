@@ -22,7 +22,20 @@ app.set("etag", false);
 app.use(express.json());
 
 app.use((req, res, next) => {
-  console.log("Request received for", req.method, req.path, req.params);
+  const now = new Date();
+  const options = {
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: false,
+    fractionalSecondDigits: 3
+  } as const;
+  console.log(
+    `[${now.toLocaleString("de-DE", options)}] Request received for`,
+    req.method,
+    req.path,
+    req.params
+  );
   res.header("Access-Control-Allow-Methods", "OPTIONS,GET,PUT,POST,PATCH,DELETE");
   res.header("Access-Control-Allow-Origin", "*");
   res.header(
@@ -131,8 +144,8 @@ app.get("/posts", (req, res) => {
   }
 
   const filter = req.query.filter ? String(req.query.filter).toLowerCase() : null;
-  console.log("FILTER", filter);
-  console.log("ORDER BY", req.query.order_by);
+  console.log("  filter", filter);
+  console.log("  order by", req.query.order_by);
 
   if (filter) {
     result = posts.filter(
