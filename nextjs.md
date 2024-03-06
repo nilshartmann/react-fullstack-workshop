@@ -13,7 +13,7 @@
 
 ---
 
-## Was macht unsere Beispiel-Anwedung aus?
+## Was macht unsere Beispiel-Anwendung aus?
 
 * Viel statischer Content
 * Viel JavaScript
@@ -267,8 +267,6 @@ Ausführung von React-Code auf Server/im Build ist kompliziert<!-- .element: cla
 * Lege außerdem eine Komponente für `/blog` an
   * Es reicht, wenn diese Komponente erstmal nur "Hello World" ausgibt.
   * Die `page.tsx`-Datei soll in das Verzeichnis `app/(content)/blog/page.tsx`
-* Wenn Du magst, kannst Du ein paar Experimente am gemeinsamen Layout für die beiden Komponenten machen
-  * Findest Du die entsprechende Datei? 🕵️
 * Wenn die Seite fertig ist:
   * Baue die "Anwendung" (`pnpm build`)
   * Starte die _fertige_ Anwendung, die auf Port 3080 läuft (`pnpm start`)
@@ -370,6 +368,8 @@ Ausführung von React-Code auf Server/im Build ist kompliziert<!-- .element: cla
   * Was passiert, wenn die Daten nur sehr langsam geladen werden?
     * Verlangsame dazu den Zugriff auf die Datenbank künstlich, in dem Du in `backend-queries.ts` mit der Konstante `getBlogTeaserListSlowdown` eine künstliche Verzögerung festlegst (in Millisekunden, z.B. 1600)
   * Füge eine Loading-Komponente (`loading.tsx` hinzu), die eine Warte-Meldung ausgibt
+  * **Anstatt** der Loading-Komponenten: 
+    * kannst Du in `layout.tsx` um die `children` eine `React.Suspense`-Komponente legen? Was passiert dann?
 
 ---
 ### Mehr zu Next.js Routen
@@ -451,12 +451,20 @@ Ausführung von React-Code auf Server/im Build ist kompliziert<!-- .element: cla
 * Kennt ihr das Problem? Meint ihr das ist ein Problem? Was könnte man dagegen tun 🤔
 
 ---
+### Einzeldarstellung
+
+* <!-- .element: class="demo" --> Page
+* <!-- .element: class="demo" --> static vs dynamic rendering 
+---
 ### Wasserfälle vermeiden
 * Mit `Suspense` können wir grundsätzlich priorisieren, was uns wichtig(er) ist:
   1. Die Seite wird erst dargestellt, wenn alle Daten geladen sind
   2. Sobald "irgendwelche" Daten (Artikel oder Kommentare) geladen wurden, diese Daten sofort anzeigen.
   3. Erst wenn die Artikel geladen wurden, diese darstellen (Falls Kommentare "schneller" sind, die Kommentare nicht vorab anzeigen)
-* <!-- .element: class="demo" --> Die drei Beispiel durchgehen (für 2. die `Post`-Komponente vorübergehend umbauen)
+* <!-- .element: class="demo" --> Die ersten beiden Beispiel durchgehen
+* <!-- .element: class="demo" --> Wie können wir das dritte Umsetzen? 🤔
+
+
 
 ---
 ### Wasserfälle vermeiden
@@ -484,7 +492,7 @@ Ausführung von React-Code auf Server/im Build ist kompliziert<!-- .element: cla
   * Um die Ladezeiten künstlich zu verlangsamen, kannst Du die Konstanten `getBlogPostSlowdown` und `getCommentsSlowdown` in `backend-queries.ts` verwenden.
 * Füge in `/app/blog/page.tsx` für jeden Post-Teaser einen Link auf die jeweilige BlogPost-Seite hinzu
   * Wenn du die `PostTeaser`-Komponente zur Darstellung verwendest, passiert das schon automatisch
-
+* Lösung in `steps/30_suspense`
 ---
 ## Aufteilung in Server-Client-Komponenten
 ### Konsequenzen

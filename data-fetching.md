@@ -305,13 +305,19 @@
 ---
 ### Übung: Blog Teaser mit TanStack Query lesen
 - Auf der Blog-Übersichtsseite fehlen die Daten 😱
-- Implementiere bitte die `BlogListPage`-Komponente. Der Rumpf der Komponente ist schon in ``BlogListPage.tsx` vorhanden. Es fehlt "nur" der Code zum Laden der Daten...
+- Implementiere bitte die `BlogListPage`-Komponente. Der Rumpf der Komponente ist schon in `BlogListPage.tsx` vorhanden. Es fehlt "nur" der Code zum Laden der Daten...
+- **👮‍ CoPilot ist verboten!**
 - Als Query-Funktion kannst Du `getBlogTeaserList` aus `backend-queries.ts` angeben
+- Du kannst `useQuery` oder `useSuspenseQuery` verwenden
+  - Bei `useSuspenseQuery` an den `Suspense`-Boundary danken!
 - Zeige eine Warte-Meldung an, während die Daten geladen werden
   - Zum künstlichen Verzögern der Daten `getBlogTeaserListSlowdown` in  `backend-queries.ts` setzen
-- Spiele mit den `refetchXyz`-Einstellungen am Query
-  - Untersuche dabei auch `isFetching`
-  - Dazu am besten: Übersichtsseite aufrufen, dann einen Blog-Post anklicken und mit "Home"-Button oben wieder auf Übersichtsseite zurück. Wann werden (warum) Server Calls ausgeführt?
+
+[//]: # (- Spiele mit den `refetchXyz`-Einstellungen am Query)
+
+[//]: # (  - Untersuche dabei auch `isFetching`)
+
+[//]: # (  - Dazu am besten: Übersichtsseite aufrufen, dann einen Blog-Post anklicken und mit "Home"-Button oben wieder auf Übersichtsseite zurück. Wann werden &#40;warum&#41; Server Calls ausgeführt?)
 
 
 
